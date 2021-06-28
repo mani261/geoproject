@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Project</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <link rel="stylesheet" href="./lib/leaflet.fullscreen.css">
+    <link rel="stylesheet" href="./lib/MarkerCluster.css">
+    <link rel="stylesheet" href="./lib/MarkerCluster.Default.css">
+
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script src="./lib/leaflet.browser.print.min.js"></script>
+    <script src="./lib/Leaflet.fullscreen.min.js"></script>
+    <script src="./lib/leaflet.markercluster.js"></script>
+    <script src="./data/data.js"></script>
+
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Hello</h1>
+    <div id="map"></div>
+    <!-- <button onclick="fullScreenView()">View in full scrren</button> -->
+
+    <script>
+            // geoJSON load
+        // L.geoJSON(data).addTo(map);
+        var random_location = L.geoJSON(data, {
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.name)
+            }
+        });
+        var markers = L.markerClusterGroup();
+        random_location.addTo(markers);
+        //markers.addTo(map);
+
+        var singleMarker = L.marker([35.69439, 51.42151])
+            .bindPopup('متن توضیحات')
+            .openPopup();
+
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        var Stadia_AlidadeSmoothDark = L.tileLayer(
+            'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+                maxZoom: 20,
+                attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+            });
+        var Stamen_Watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: 'abcd',
+            minZoom: 1,
+            maxZoom: 16,
+            ext: 'jpg'
+        });
+        var parsijoo = L.tileLayer(
+            'https://developers.parsijoo.ir/web-service/v1/map/?type=tile&x={x}&y={y}&z={z}&apikey=627973149c2041b184e31259821d1306', {
+                maxZoom: 21,
+            });
+
+        // var map = L.map('map').setView([35.69439, 51.42151], 13);
+
+        var map = L.map('map', {
+            center: [35.69439, 51.42151],
+            zoom: 13, 
+            layers: [osm, markers]
+        });
+
+        // add scale map
+        L.control.scale().addTo(map);
+
+        // add fulscreen view
+        map.addControl(new L.Control.Fullscreen());
+
+        // var mapID = document.getElementById('map');
+        // function fullScreenView( ) {
+        //     mapID.requestFullscreen();
+        // }
+
+
+        // add print button
+        L.control.browserPrint().addTo(map);
+
+
+
+        // Leaflet Layer Control
+        var baseMaps = {
+            'OSM': osm,
+            'Dark': Stadia_AlidadeSmoothDark,
+            'Watercolor': Stamen_Watercolor,
+            'Parsijoo': parsijoo
+        }
+        var overlayMaps = {
+            'GeoJSON Markers': markers,
+            'Single Marker': singleMarker
+        }
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+    </script>
+</body>
+
+</html>
