@@ -71,7 +71,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // var geojsonLayer = new L.GeoJSON.AJAX('data/attractions_2.geojson').addTo(map);
-var geojsonLayer = new L.GeoJSON.AJAX('data/attractions_2.geojson', {pointToLayer: function(feature, latlang) {
+var geojsonLayer = new L.geoJSON.ajax('data/attractions_2.geojson', {pointToLayer: function(feature, latlang) {
     var str = "<h4>"+feature.properties.name+"</h4>";
     return L.marker(latlang).bindPopup(str);
 }});
